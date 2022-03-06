@@ -1,6 +1,7 @@
 import React from 'react'
 import {useNavigate} from 'react-router-dom'
 
+
 const data = [
   { FieldId: 0, Region: "Shusha" },
   { FieldId: 1, Region: "Khankendi" },

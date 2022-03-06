@@ -37,9 +37,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'novatech',
+    'rest_framework',
+    'corsheaders'
 ]
 
+CORS_ORIGIN_ALLOW_ALL=True
+
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -73,10 +79,16 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
+import pymysql
+pymysql.install_as_MySQLdb()
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'kamran8601_crop_recommendation',
+        'USER': '222649_hackathon',                     # <-- UPDATED line
+        'PASSWORD': 'novatech2022',              # <-- UPDATED line
+        'HOST': 'mysql-kamran8601.alwaysdata.net',                # <-- UPDATED line
     }
 }
 
