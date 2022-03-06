@@ -67,11 +67,11 @@ const Analysis = ({ fieldId }) => {
         </tbody>
       </table>
       {result != null ? (
-        <div>
+        <div className="results">
           {result[1].map((item) => (
             <>
-              <h3>Crop: {item[0]}</h3>
-              <h3>Fit: {item[1]}</h3>
+              <p>Crop: {item[0]}</p>
+              <p>Fit: {item[1]*100}%</p>
             </>
           ))}
         </div>
