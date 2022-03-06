@@ -1,24 +1,29 @@
-import React from 'react'
-import {useNavigate} from 'react-router-dom'
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
+const Home = ({ setFieldId }) => {
+  let [loading, setLoading] = useState(true);
+  let [regions, setRegions] = useState([]);
 
-const data = [
-  { FieldId: 0, Region: "Shusha" },
-  { FieldId: 1, Region: "Khankendi" },
-  { FieldId: 2, Region: "Zangilan" },
-  { FieldId: 3, Region: "Shusha" },
-  { FieldId: 4, Region: "Aghdam" },
-];
+  useEffect(() => {
+    axios.get("http://127.0.0.1:8000/regions").then((response) => {
+      setRegions(response.data);
+      console.log(regions)
+      setLoading(false);
+    });
+  }, []);
 
-const Home = ({setFieldId}) => {
+  let navigate = useNavigate();
+  const setField = (id) => {
+    if (setFieldId(id)) console.log(id);
 
-    let navigate = useNavigate(); 
-    const setField =(id) => {
-        if(setFieldId(id))
-        console.log(id)
+    navigate("/Analysis");
+  };
 
-        navigate('/Analysis')
-    }
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="home">
@@ -31,13 +36,13 @@ const Home = ({setFieldId}) => {
           </tr>
         </thead>
         <tbody>
-          {data.map((val, key) => {
+          {regions.map((val, key) => {
             return (
               <tr key={key}>
-                <td>{val.FieldId}</td>
-                <td>{val.Region}</td>
+                <td>{val.region_id}</td>
+                <td>{val.region}</td>
                 <td>
-                  <button onClick={() => setField(val.FieldId)}>Analyze</button>
+                  <button onClick={() => setField(val.region_id)}>Analyze</button>
                 </td>
               </tr>
             );
@@ -46,7 +51,6 @@ const Home = ({setFieldId}) => {
       </table>
     </div>
   );
-}
+};
 
-
-export default Home
+export default Home;
