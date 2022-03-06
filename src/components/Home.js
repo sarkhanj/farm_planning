@@ -27,10 +27,11 @@ const Home = ({ setFieldId }) => {
 
   return (
     <div className="home">
+      <h1>Regions</h1>
       <table>
         <thead>
           <tr>
-            <th>FieldId</th>
+            <th>RegionID</th>
             <th>Region</th>
             <th>Action</th>
           </tr>
@@ -42,7 +43,7 @@ const Home = ({ setFieldId }) => {
                 <td>{val.region_id}</td>
                 <td>{val.region}</td>
                 <td>
-                  <button onClick={() => setField(val.region_id)}>Analyze</button>
+                  <button onClick={() => setField(val.region_id)}>Records</button>
                 </td>
               </tr>
             );
