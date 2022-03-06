@@ -1,73 +1,31 @@
-import React from "react";
-
-const records = [
-  {
-    FieldId: 0,
-    N: 232,
-    P: 2323,
-    K: 23,
-    temperature: 23,
-    humidity: 23,
-    pH: 6,
-    rainfall: 222,
-  },
-  {
-    FieldId: 0,
-    N: 232,
-    P: 2323,
-    K: 23,
-    temperature: 23,
-    humidity: 23,
-    pH: 6,
-    rainfall: 222,
-  },
-  {
-    FieldId: 1,
-    N: 232,
-    P: 2323,
-    K: 23,
-    temperature: 23,
-    humidity: 23,
-    pH: 6,
-    rainfall: 222,
-  },
-  {
-    FieldId: 1,
-    N: 232,
-    P: 2323,
-    K: 23,
-    temperature: 23,
-    humidity: 23,
-    pH: 6,
-    rainfall: 222,
-  },
-  {
-    FieldId: 2,
-    N: 232,
-    P: 2323,
-    K: 23,
-    temperature: 23,
-    humidity: 23,
-    pH: 6,
-    rainfall: 222,
-  },
-  {
-    FieldId: 2,
-    N: 232,
-    P: 2323,
-    K: 23,
-    temperature: 23,
-    humidity: 23,
-    pH: 6,
-    rainfall: 222,
-  },
-];
-
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 // N, P, K, temperature, humidity, ph, rainfall;
 
 const Analysis = ({ fieldId }) => {
+  const [records, setRecords] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [result, setResult] = useState(null)
+  const [analyzed, setAnalyzed] = useState(false)
+
+  useEffect(() => {
+    axios.get("http://127.0.0.1:8000/records/" + fieldId).then((response) => {
+      setRecords(response.data);
+      console.log(response.data);
+      setLoading(false);
+    });
+  }, []);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
   const analyze = (record) => {
     // Here we send request to abckedn for machine learning
+    axios.get("http://127.0.0.1:8000/ml/"+record.record_id).then(response=>{
+      console.log(response)
+      setResult(response.data)
+    })
     console.log("Analyzing the record: ", record);
   };
 
@@ -88,25 +46,36 @@ const Analysis = ({ fieldId }) => {
           </tr>
         </thead>
         <tbody>
-          {records.filter(r => r.FieldId == fieldId).map((record, key) => {
-            return (
-                
-              <tr key={key}>
-                <td>{record.N}</td>
-                <td>{record.P}</td>
-                <td>{record.K}</td>
-                <td>{record.temperature}</td>
-                <td>{record.humidity}</td>
-                <td>{record.pH}</td>
-                <td>{record.rainfall}</td>
-                <td>
-                  <button onClick={() => analyze(record)}>Analyze</button>
-                </td>
-              </tr>
-            );
-          })}
+          {records
+            .filter((r) => r.region_id == fieldId)
+            .map((record, key) => {
+              return (
+                <tr key={key}>
+                  <td>{record.N}</td>
+                  <td>{record.P}</td>
+                  <td>{record.K}</td>
+                  <td>{record.temperature}</td>
+                  <td>{record.humidity}</td>
+                  <td>{record.pH}</td>
+                  <td>{record.rainfall}</td>
+                  <td>
+                    <button onClick={() => analyze(record)}>Analyze</button>
+                  </td>
+                </tr>
+              );
+            })}
         </tbody>
       </table>
+      {result != null ? (
+        <div>
+          {result[1].map((item) => (
+            <>
+              <h3>Crop: {item[0]}</h3>
+              <h3>Fit: {item[1]}</h3>
+            </>
+          ))}
+        </div>
+      ) : null}
     </>
   );
 };
